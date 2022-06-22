@@ -19,7 +19,7 @@ const crearDeck = () => {
     }
 
     for (let tipo of tipos) {
-        for(let esp of especiales) {
+        for (let esp of especiales) {
             deck.push(esp + tipo);
         }
     }
@@ -36,7 +36,7 @@ crearDeck();
 const pedirCarta = () => {
 
     if (deck.length === 0) {
-        throw  'No hay cartas en el deck';
+        throw 'No hay cartas en el deck';
     }
 
     const carta = deck.pop();
@@ -45,4 +45,16 @@ const pedirCarta = () => {
     return carta;
 }
 
-pedirCarta();
+// pedirCarta();
+const valorCarta = (carta) => {
+
+    const valor = carta.substring(0, carta.length - 1);
+
+    return (isNaN(valor)) ?
+        (valor === 'A') ? 11 : 10
+        : valor * 1;
+
+}
+
+const valor = valorCarta(pedirCarta());
+console.log(valor);
