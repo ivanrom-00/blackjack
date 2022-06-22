@@ -1,25 +1,29 @@
 const juego = (() => {
     'use strict'
 
-    let deck = [];
-    const tipos = ['C', 'D', 'H', 'S'],
-        especiales = ['A', 'J', 'Q', 'K'];
+    // ---------------------------------------------------------------------------------------------------------------
+    // CONSTANTES, VARIABLES Y REFERENCIAS
 
-    // let puntosJugador = 0,
-    //     puntosComputadora = 0;
+    let   deck       = [];
+    const tipos      = ['C', 'D', 'H', 'S'],
+          especiales = ['A', 'J', 'Q', 'K'];
 
     let puntosJugadores = [];
 
     // Referencias de HTML
-    const btnPedir = document.querySelector('#btnPedir'),
-        btnDetener = document.querySelector('#btnDetener'),
-        btnNuevo = document.querySelector('#btnNuevo');
+    const btnPedir           = document.querySelector('#btnPedir'),
+          btnDetener         = document.querySelector('#btnDetener'),
+          btnNuevo           = document.querySelector('#btnNuevo'),
+          divCartasJugadores = document.querySelectorAll('.divCartas'),
+          puntosHTML         = document.querySelectorAll('small');
 
-    const divCartasJugadores = document.querySelectorAll('.divCartas'),
-        puntosHTML = document.querySelectorAll('small');
+    // ---------------------------------------------------------------------------------------------------------------
+    // FUNCIONES
 
-    // Esta función inicializa el juego
+    // Función para inicializar el juego
     const inicializarJuego = (numJugadores = 2) => {
+        console.clear();
+
         deck = crearDeck();
 
         puntosJugadores = [];
@@ -31,9 +35,10 @@ const juego = (() => {
         divCartasJugadores.forEach(elem => elem.innerHTML = '');
 
         btnPedir.disabled = false;
-        // btnDetener.disabled = false;
     }
 
+    // ---------------------------------------------------------------------------------------------------------------
+    
     // Función para crear un nuevo deck
     const crearDeck = () => {
 
@@ -54,6 +59,8 @@ const juego = (() => {
         return _.shuffle(deck);
     }
 
+    // ---------------------------------------------------------------------------------------------------------------
+
     // Función para tomar una carta
     const pedirCarta = () => {
 
@@ -64,6 +71,8 @@ const juego = (() => {
         return deck.pop();
     }
 
+    // ---------------------------------------------------------------------------------------------------------------
+
     // Función para obtener el valor de una carta
     const valorCarta = (carta) => {
         const valor = carta.substring(0, carta.length - 1);
@@ -73,6 +82,8 @@ const juego = (() => {
 
     }
 
+    // ---------------------------------------------------------------------------------------------------------------
+
     // Turno: 0 -> Primer jugador. Último -> Computadora
     const acumularPuntos = (carta, turno) => {
         puntosJugadores[turno] += valorCarta(carta);
@@ -80,6 +91,9 @@ const juego = (() => {
         return puntosJugadores[turno];
     }
 
+    // ---------------------------------------------------------------------------------------------------------------
+
+    // Función para crear una carta y mostrarla según el jugador
     const crearCarta = (carta, turno) => {
         const imgCarta = document.createElement('img');
         imgCarta.src = `assets/cartas/${carta}.png`;
@@ -87,6 +101,9 @@ const juego = (() => {
         divCartasJugadores[turno].append(imgCarta);
     }
 
+    // ---------------------------------------------------------------------------------------------------------------
+
+    // Función para determinar el ganador según los puntos
     const determinarGanador = () => {
         const [puntosMinimos, puntosComputadora] = puntosJugadores;
 
@@ -95,7 +112,7 @@ const juego = (() => {
                 console.warn('Empate');
                 alert('Empate');
             } else if (puntosMinimos > 21) {
-                console.warn('Computadora');
+                console.warn('Computadora gana');
                 alert('Computadora gana');
             } else if (puntosComputadora > 21) {
                 console.warn('Jugador gana');
@@ -106,6 +123,8 @@ const juego = (() => {
             }
         }, 50);
     }
+
+    // ---------------------------------------------------------------------------------------------------------------
 
     // Turno de la computadora
     const turnoComputadora = (puntosMinimos) => {
@@ -121,7 +140,10 @@ const juego = (() => {
         determinarGanador();
     }
 
-    // Eventos
+    // ---------------------------------------------------------------------------------------------------------------
+    // EVENTOS
+
+    // Botón para pedir carta para el jugador
     btnPedir.addEventListener('click', () => {
         const carta = pedirCarta();
         const puntosJugador = acumularPuntos(carta, 0);
@@ -141,18 +163,29 @@ const juego = (() => {
         }
     });
 
+    // ---------------------------------------------------------------------------------------------------------------
+
+    // Botón para detener el juego y determinar el ganador
     btnDetener.addEventListener('click', () => {
         turnoComputadora(puntosJugadores[0]);
         btnPedir.disabled = true;
         btnDetener.disabled = true;
     });
 
+    // ---------------------------------------------------------------------------------------------------------------
+
+    // Botón para iniciar un nuevo juego
     btnNuevo.addEventListener('click', () => {
         inicializarJuego();
     });
 
+    // ---------------------------------------------------------------------------------------------------------------
+
+    // Retorno del módulo
     return {
         init: inicializarJuego
     };
+
+    // ---------------------------------------------------------------------------------------------------------------
 
 })();
